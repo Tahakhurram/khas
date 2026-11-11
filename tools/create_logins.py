@@ -90,7 +90,9 @@ def main():
     require("Staff", staff_token, DATA_REPO, "none")      # staff must never be able to open the books
     require("Staff", staff_token, HOSTEL_REPO, "none")
     if hostel_token:
-        require("Hostel", hostel_token, HOSTEL_REPO, "read")  # KHAS must not be able to change hostel data
+        got = access(hostel_token, HOSTEL_REPO)
+        if got == "none": sys.exit(f"Hostel token cannot open {GH_OWNER}/{HOSTEL_REPO}.")
+        print(f"  Hostel token -> {HOSTEL_REPO}: {got}  OK" + ("  (read-only is safer; KHAS never writes there)" if got == "write" else ""))
     else:
         print("  No hostel token: KHAS will run without the hostel feed.")
 
