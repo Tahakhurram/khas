@@ -20,7 +20,7 @@ What it does:
 Passwords are never printed. Open credentials/credentials.xlsx in khas-data to read them.
 Re-run it whenever a token expires or you want to replace all passwords.
 """
-import base64, datetime, getpass, io, json, os, secrets, subprocess, sys, urllib.error, urllib.request
+import base64, datetime, getpass, io, json, os, secrets, subprocess, sys, time, urllib.error, urllib.request
 
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
@@ -57,11 +57,15 @@ def encrypt(password, payload):
 def gh(token, method, path, body=None):
     req = urllib.request.Request("https://api.github.com" + path, method=method, data=json.dumps(body).encode() if body else None,
                                  headers={"Authorization": "Bearer " + token, "Accept": "application/vnd.github+json"})
-    try:
-        with urllib.request.urlopen(req) as r:
-            return r.status, json.loads(r.read() or b"{}")
-    except urllib.error.HTTPError as e:
-        return e.code, {}
+    for attempt in range(5):  # retry brief network hiccups (Wi-Fi drops, GitHub blips)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return r.status, json.loads(r.read() or b"{}")
+        except urllib.error.HTTPError as e:
+            return e.code, {}
+        except (urllib.error.URLError, OSError):
+            if attempt == 4: sys.exit("Cannot reach GitHub. Check your internet connection and run this again.")
+            time.sleep(2 * (attempt + 1))
 
 
 def access(token, repo):
