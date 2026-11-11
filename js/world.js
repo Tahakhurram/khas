@@ -158,7 +158,7 @@ function sprite(u, m, spare) {
       + windows(16.2, 17.4, 2, 1.4, 30, { cols: 4, rows: 1, lit: litFn(0.5), side: 'left' }) + quad(18.4, 19.4, 2.6, 0.7, '#a58f6f', 'stroke="#806c50"') + [0, 1, 2].map((i) => box(17 + i * 0.45, 19.5, 0.4, 0.4, 11, [PAL.brick, { left: '#5a7fb0', right: '#4a6a95', top: '#7c9cc7' }, { left: '#4b8a7a', right: '#3d7365', top: '#69a595' }][i])).join('') + ship(21.6, 21, m.sailing);
     case 'flats': return shadow(15, 1.2, 2.2, 2) + building(15, 1.2, 2.2, 2, 4, PAL.cream, m.frac) + tree(14.3, 3, 0.9);
     case 'tower': return towerSprite(21.5, 1.9, m.due);
-    case 'hostel': return shadow(20.6, 7.4, 2.6, 2.2) + building(20.6, 7.4, 2.6, 2.2, 4, PAL.brick, m.frac) + sign(23.5, 9.7, 'HOSTEL DE KHAS', '#1f4d3a');
+    case 'hostel': return shadow(20.6, 7.4, 2.6, 2.2) + building(20.6, 7.4, 2.6, 2.2, 4, PAL.brick, m.frac) + sign(23.5, 9.7, 'HDK-1', '#1f4d3a');
     case 'construction': return construction(15.2, 6, 2, 2, 4, m.pct);
     case 'landtrade': return [[13.7, 9.2], [14.8, 9.2], [13.7, 10.3]].map(([x, y], i) => { const p = (m.plots || [])[i];
       return quad(x, y, 0.95, 0.95, p ? (p.up ? '#a9c084' : '#c2b894') : '#cfc8b4', `stroke="#fff" stroke-width="1.5" stroke-dasharray="${p ? '0' : '4 3'}"`) + (p && p.status === 'sold' ? sign(x + 0.5, y + 0.5, 'SOLD', '#b8473d') : p && p.status === 'for-sale' ? sign(x + 0.5, y + 0.5, 'FOR SALE', '#2f7d4f') : ''); }).join('');
